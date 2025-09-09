@@ -25,30 +25,41 @@ class _HomeState extends State<Home> {
     fontWeight: FontWeight.bold,
   );
 
-  Widget btn(String texto, String valor) {
+  final ButtonStyle estiloBtnAcao = ButtonStyle(
+    backgroundColor: WidgetStatePropertyAll<Color>(const Color.fromARGB(255, 200, 236, 190)),
+  );
+  
+
+  Widget btn(String texto, String valor, ButtonStyle estilobtn) {
     return Padding(
       padding: EdgeInsetsGeometry.all(8),
       child: ElevatedButton(
         onPressed: () {
           setState(() {
+            
             if (expressao == "0") {
               expressao = valor;
+            } else if (valor == "⌫") {
+              if (expressao.length > 1) {
+                expressao = expressao.substring(0, expressao.length - 1);
+              } else {
+                expressao = "0";
+              }
+            } else if (valor == "=") {
+              Expression exp = Parser().parse(expressao);
+              double resultado = exp.evaluate(
+                EvaluationType.REAL,
+                ContextModel(),
+              );
+              setState(() {
+                expressao = resultado.toStringAsFixed(1);
+              });
             } else {
               expressao += valor;
             }
+            
           });
         },
-        style: estilobtn,
-        child: Text(texto, style: estiloTextobtn),
-      ),
-    );
-  }
-
-  Widget btnAcao(String texto, VoidCallback onPressed) {
-    return Padding(
-      padding: EdgeInsetsGeometry.all(8),
-      child: ElevatedButton(
-        onPressed: onPressed,
         style: estilobtn,
         child: Text(texto, style: estiloTextobtn),
       ),
@@ -59,7 +70,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Calculadora simples"),
+        title: Text("Calculadora simples", style: estiloTextobtn,),
         centerTitle: true,
         backgroundColor: Colors.greenAccent,
       ),
@@ -88,60 +99,45 @@ class _HomeState extends State<Home> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  btn("0", "0"),
-                  btnAcao("⌫", () {
-                    setState(() {
-                      if (expressao.length > 1) {
-                        expressao = expressao.substring(
-                          0,
-                          expressao.length - 1,
-                        );
-                      } else {
-                        expressao = "0";
-                      }
-                    });
-                  }),
-                  btnAcao("=", () {
-                    Expression exp = Parser().parse(expressao);
-                    double resultado = exp.evaluate(
-                      EvaluationType.REAL,
-                      ContextModel(),
-                    );
-                    setState(() {
-                      expressao = resultado.toString();
-                    });
-                  }),
-
-                  btn("×", "*"),
+                  btn("0", "0",estilobtn),
+                  btn("⌫", "⌫",estiloBtnAcao),
+                  btn("=", "=",estiloBtnAcao),
+                  btn("×", "*",estiloBtnAcao),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  btn("7", "7"),
-                  btn("8", "8"),
-                  btn("9", "9"),
-                  btn("+", "+"),
+                  btn("7", "7",estilobtn),
+                  btn("8", "8",estilobtn),
+                  btn("9", "9",estilobtn),
+                  btn("+", "+",estiloBtnAcao),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  btn("4", "4"),
-                  btn("5", "5"),
-                  btn("6", "6"),
-                  btn("-", "-"),
+                  btn("4", "4",estilobtn),
+                  btn("5", "5",estilobtn),
+                  btn("6", "6",estilobtn),
+                  btn("-", "-",estiloBtnAcao),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  btn("1", "1"),
-                  btn("2", "2"),
-                  btn("3", "3"),
-                  btn("÷", "/"),
+                  btn("1", "1",estilobtn),
+                  btn("2", "2",estilobtn),
+                  btn("3", "3",estilobtn),
+                  btn("÷", "/",estiloBtnAcao),
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  btn(",", ".", estiloBtnAcao)
+                ],
+              )
             ],
           ),
         ),
