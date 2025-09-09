@@ -15,210 +15,135 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String expressao = "0";
 
-  final ButtonStyle estiloBotao = ButtonStyle(
+  final ButtonStyle estilobtn = ButtonStyle(
     backgroundColor: WidgetStatePropertyAll<Color>(Colors.green),
-    
   );
 
-  final TextStyle estiloTextoBotao = const TextStyle(
+  final TextStyle estiloTextobtn = const TextStyle(
     color: Color.fromARGB(255, 14, 13, 13),
     fontSize: 20,
     fontWeight: FontWeight.bold,
   );
 
+  Widget btn(String texto, String valor) {
+    return Padding(
+      padding: EdgeInsetsGeometry.all(8),
+      child: ElevatedButton(
+        onPressed: () {
+          setState(() {
+            if (expressao == "0") {
+              expressao = valor;
+            } else {
+              expressao += valor;
+            }
+          });
+        },
+        style: estilobtn,
+        child: Text(texto, style: estiloTextobtn),
+      ),
+    );
+  }
+
+  Widget btnAcao(String texto, VoidCallback onPressed) {
+    return Padding(
+      padding: EdgeInsetsGeometry.all(8),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: estilobtn,
+        child: Text(texto, style: estiloTextobtn),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Calculadora simples"),
+        centerTitle: true,
+        backgroundColor: Colors.greenAccent,
+      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  expressao,
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 14, 13, 13),
-                    fontSize: 70,
-                  ),
+        child: Padding(
+          padding: EdgeInsetsGeometry.only(bottom: 50, top: 50),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: EdgeInsetsGeometry.fromLTRB(0, 0, 10, 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      expressao,
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 14, 13, 13),
+                        fontSize: 70,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  btn("0", "0"),
+                  btnAcao("⌫", () {
                     setState(() {
-                      expressao += "0";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("0", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao = expressao.substring(0, expressao.length - 1);
-                      if (expressao.isEmpty) {
+                      if (expressao.length > 1) {
+                        expressao = expressao.substring(
+                          0,
+                          expressao.length - 1,
+                        );
+                      } else {
                         expressao = "0";
                       }
                     });
-                  },
-                  style: estiloBotao,
-                  child: Text("X", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Expression expressaoFinal = Parser().parse(expressao);
-                    double resultado = expressaoFinal.evaluate(
+                  }),
+                  btnAcao("=", () {
+                    Expression exp = Parser().parse(expressao);
+                    double resultado = exp.evaluate(
                       EvaluationType.REAL,
                       ContextModel(),
                     );
                     setState(() {
                       expressao = resultado.toString();
                     });
-                  },
-                  style: estiloBotao,
-                  child: Text("=", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "×";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("×", style: estiloTextoBotao),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "7";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("7", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "8";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("8", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "9";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("9", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "+";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("+", style: estiloTextoBotao),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "4";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("4", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "5";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("5", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "6";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("6", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "-";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("-", style: estiloTextoBotao),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "1";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("1", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "2";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("2", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "3";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("3", style: estiloTextoBotao),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      expressao += "÷";
-                    });
-                  },
-                  style: estiloBotao,
-                  child: Text("÷", style: estiloTextoBotao),
-                ),
-              ],
-            ),
-          ],
+                  }),
+
+                  btn("×", "*"),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  btn("7", "7"),
+                  btn("8", "8"),
+                  btn("9", "9"),
+                  btn("+", "+"),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  btn("4", "4"),
+                  btn("5", "5"),
+                  btn("6", "6"),
+                  btn("-", "-"),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  btn("1", "1"),
+                  btn("2", "2"),
+                  btn("3", "3"),
+                  btn("÷", "/"),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
